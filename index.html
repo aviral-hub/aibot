@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        h1 {
+            margin: 0;
+        }
+        main {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        .info {
+            flex: 1;
+            padding-right: 40px;
+        }
+        .chat-container {
+            flex: 1;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .chat-messages {
+            height: 400px;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .chat-input input {
+            flex-grow: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .chat-input button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Our AI Chatbot</h1>
+    </header>
+
+    <div class="container">
+        <main>
+            <div class="info">
+                <h2>Experience the Power of AI</h2>
+                <p>Our AI chatbot is here to assist you with any questions or tasks you may have. Whether you need information, guidance, or just want to chat, our AI is ready to help!</p>
+                <p>Key features:</p>
+                <ul>
+                    <li>24/7 availability</li>
+                    <li>Instant responses</li>
+                    <li>Wide range of knowledge</li>
+                    <li>Personalized assistance</li>
+                </ul>
+                <a href="#" class="btn" onclick="toggleChat()">Start Chatting</a>
+            </div>
+            <div class="chat-container" id="chat-container" style="display: none;">
+                <div class="chat-header">
+                    AI Chatbot
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Messages will be displayed here -->
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="user-input" placeholder="Type your message...">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="text/javascript">
+        (function(d, t) {
+            var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            v.onload = function() {
+                window.voiceflow.chat.load({
+                    verify: { projectID: '67b9601ac97c50a0c1d0c09e' },
+                    url: 'https://general-runtime.voiceflow.com',
+                    versionID: 'production', 
+                    voice: { 
+                        url: "https://runtime-api.voiceflow.com" 
+                    }
+                });
+            }
+            v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+        })(document, 'script');
+
+        function toggleChat() {
+            var chatContainer = document.getElementById('chat-container');
+            chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function sendMessage() {
+            var userInput = document.getElementById('user-input');
+            var message = userInput.value.trim();
+            if (message) {
+                addMessageToChat('User', message);
+                userInput.value = '';
+                window.voiceflow.chat.interact(message);
+            }
+        }
+
+        function addMessageToChat(sender, message) {
+            var chatMessages = document.getElementById('chat-messages');
+            var messageElement = document.createElement('div');
+            messageElement.innerHTML = '<strong>' + sender + ':</strong> ' + message;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        window.addEventListener('voiceflow-chat-response', function(event) {
+            var response = event.detail.message;
+            addMessageToChat('Bot', response);
+        });
+    </script>
+</body>
+</html>
