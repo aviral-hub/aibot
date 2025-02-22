@@ -27,51 +27,15 @@
         }
         main {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
             margin-top: 40px;
         }
         .info {
-            flex: 1;
-            padding-right: 40px;
-        }
-        .chat-container {
-            flex: 1;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .chat-header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
             text-align: center;
-            font-size: 18px;
-        }
-        .chat-messages {
-            height: 400px;
-            padding: 10px;
-            overflow-y: auto;
-        }
-        .chat-input {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid #ccc;
-        }
-        .chat-input input {
-            flex-grow: 1;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        .chat-input button {
-            margin-left: 10px;
-            padding: 5px 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
+            max-width: 600px;
+            margin-bottom: 20px;
         }
         .btn {
             display: inline-block;
@@ -81,6 +45,7 @@
             text-decoration: none;
             border-radius: 5px;
             margin-top: 20px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -101,19 +66,7 @@
                     <li>Wide range of knowledge</li>
                     <li>Personalized assistance</li>
                 </ul>
-                <a href="#" class="btn" onclick="toggleChat()">Start Chatting</a>
-            </div>
-            <div class="chat-container" id="chat-container" style="display: none;">
-                <div class="chat-header">
-                    AI Chatbot
-                </div>
-                <div class="chat-messages" id="chat-messages">
-                    <!-- Messages will be displayed here -->
-                </div>
-                <div class="chat-input">
-                    <input type="text" id="user-input" placeholder="Type your message...">
-                    <button onclick="sendMessage()">Send</button>
-                </div>
+                <button class="btn" onclick="openVoiceflowChat()">Start Chatting</button>
             </div>
         </main>
     </div>
@@ -134,33 +87,15 @@
             v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
         })(document, 'script');
 
-        function toggleChat() {
-            var chatContainer = document.getElementById('chat-container');
-            chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function sendMessage() {
-            var userInput = document.getElementById('user-input');
-            var message = userInput.value.trim();
-            if (message) {
-                addMessageToChat('User', message);
-                userInput.value = '';
-                window.voiceflow.chat.interact(message);
+        function openVoiceflowChat() {
+            // Check if the Voiceflow chat is loaded
+            if (window.voiceflow && window.voiceflow.chat) {
+                // Open the Voiceflow chat interface
+                window.voiceflow.chat.open();
+            } else {
+                console.error("Voiceflow chat is not loaded yet.");
             }
         }
-
-        function addMessageToChat(sender, message) {
-            var chatMessages = document.getElementById('chat-messages');
-            var messageElement = document.createElement('div');
-            messageElement.innerHTML = '<strong>' + sender + ':</strong> ' + message;
-            chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        window.addEventListener('voiceflow-chat-response', function(event) {
-            var response = event.detail.message;
-            addMessageToChat('Bot', response);
-        });
     </script>
 </body>
 </html>
